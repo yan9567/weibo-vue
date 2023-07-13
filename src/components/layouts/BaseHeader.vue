@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { toggleDark } from "~/composables";
+import { toggleDark } from "~/composables"; //composables组合式函数，类似uitls
 </script>
 
 <template>
