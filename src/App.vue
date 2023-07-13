@@ -1,4 +1,5 @@
 <template>
+  <!-- el-config-provider自定义css命名空间，为了element plus命名不和element ui冲突 -->
   <el-config-provider namespace="ep">
     <BaseHeader />
     <div class="flex main-container">

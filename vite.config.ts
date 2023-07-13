@@ -20,6 +20,7 @@ const pathSrc = path.resolve(__dirname, 'src')
 export default defineConfig({
   resolve: {
     alias: {
+      //路径使用别名
       '~/': `${pathSrc}/`,
     },
   },
