@@ -1,6 +1,7 @@
 // import dark theme
 @use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
 
+//全局css变量
 // :root {
 //   --ep-color-primary: red;
 // }
@@ -14,6 +15,7 @@ body {
 }
 
 a {
+  //var(引用变量, 默认值) ==> css语法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/var
   color: var(--ep-color-primary);
 }
 

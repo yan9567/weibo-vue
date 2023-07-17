@@ -19,6 +19,7 @@ $--colors: (
   ),
 );
 
+//forward转发引用，将引用暴露出去，不会增加多余代码
 // 自定义命名空间, default is 'el'
 @forward "element-plus/theme-chalk/src/mixins/config.scss" with (
   $namespace: "ep"

@@ -25,7 +25,9 @@ export default defineConfig({
     },
   },
   css: {
+    //预处理选项
     preprocessorOptions: {
+      //vite指定全局css变量
       scss: {
         additionalData: `@use "~/styles/element/index.scss" as *;`,
       },
