@@ -6,12 +6,12 @@
 *   import {createRouter, createWebHashHistory} from 'vue-router' ==》 指定功能
 */
 import * as VueRouter from 'vue-router'
-import Logs from "../components/Logos.vue";
 
 
 const routes = [
     { path: '/', component: import("../components/layouts/MainContent.vue") },
-    { path: '/logs', component: Logs },
+    { path: '/logs', component: import("../components/Logos.vue") },
+    { path: '/login', component: import("../components/Login.vue")},
     {
         //404
         path: '/:pathMatch(.*)*',

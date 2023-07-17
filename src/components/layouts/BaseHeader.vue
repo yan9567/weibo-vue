@@ -6,10 +6,10 @@ import { toggleDark, gotoUrl, openUrl } from "~/composables"; //composablesÁªÑÂê
   <el-row justify="center">
     <el-col :span="10">
       <el-menu class="el-menu-demo" mode="horizontal" :ellipsis=false>
-        <el-menu-item index="1">LOG</el-menu-item>
+        <el-menu-item index="1" @click="$router.push('/')">LOG</el-menu-item>
         <!-- unocss -->
-        <div flex-1 />
-        <el-menu-item index="2" @click="$router.push('/')">Login</el-menu-item>
+        <div class="flex-1" />
+        <el-menu-item index="2" @click="$router.push('/login')">Login</el-menu-item>
         <el-menu-item index="3" @click="gotoUrl('https://blog.ppos.top')">Blog</el-menu-item>
         <el-sub-menu index="4">
           <template #title>Others</template>
