@@ -1,5 +1,5 @@
 <template>
-  <div>contents</div>
+  <div>{{ $router.currentRoute.value.fullPath }}</div>
 </template>
   
 <script lang="ts" setup>

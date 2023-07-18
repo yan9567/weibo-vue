@@ -1,29 +1,72 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
-const input = ref('');
+import { reactive, ref } from 'vue';
+import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+
+interface User {
+  username: string
+  password: string
+}
+const formRef = ref<FormInstance>()
+const user = reactive<User>({
+  username: '',
+  password: ''
+})
+const rules = reactive<FormRules<User>>({
+  username: [
+    { required: true, message: '用户名不能为空', trigger: 'blur' }, //blur 失去聚点触发
+    { min: 2, max: 10, message: '用户名为2~10个字符', trigger: 'blur' },
+  ],
+  password: [
+    {
+      required: true,
+      message: '密码不能为空',
+      trigger: 'change',
+    },
+  ]
+});
+
+const toast = () => {
+  ElMessage.success("未实现");
+};
+
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log('submit!')
+      //TODO 登录操作
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
 </script>
 
 <template>
-  <div class="input-box">
-    <el-row :gutter="20">
-      <span class="ml-3  text-gray-600 ">账号</span>
-      <el-input v-model="input" class="w-5 m-2" placeholder="Please input" />
-    </el-row>
+  <el-form :inline="false" :rules="rules" ref="formRef" :model="user" label-width="auto" class="login-form-inline">
 
-  </div>
-  <div class="input-box">
-    <el-row :gutter="20">
-      <span class="ml-3 text-gray-600 inline-flex items-center">密码</span>
-      <el-input v-model="input" class="w-5 m-2" placeholder="Please input" />
-    </el-row>
+    <el-form-item label="账号" prop="username">
+      <el-input v-model="user.username" maxlength="10" class="el-input" placeholder="请输入用户名" clearable />
+    </el-form-item>
 
-  </div>
-  <div>
-    <el-row>
-      <el-button>登录</el-button>
-      <el-button>注册</el-button>
+    <el-form-item label="密码" prop="password">
+      <el-input v-model="user.password" maxlength="10" class="el-input" placeholder="请输入密码" clearable show-password />
+    </el-form-item>
 
-    </el-row>
+    <el-form-item label=" ">
+      <el-button type="primary" @click="submitForm(formRef)">登录</el-button>
+      <el-button @click="toast">注册</el-button>
+    </el-form-item>
 
-  </div>
+  </el-form>
 </template>
+
+<style lang="scss" scoped>
+// .el-input {
+//   width: auto;
+// }
+</style>

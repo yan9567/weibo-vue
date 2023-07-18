@@ -3,6 +3,7 @@
   <el-config-provider namespace="ep">
     <BaseHeader />
     <div class="flex main-container">
+      <!--w py 都是unocss-->
       <el-row w="full" py="4" justify="center">
         <el-col :span="10">
           <!-- 路由出口 -->
