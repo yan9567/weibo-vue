@@ -4,7 +4,7 @@ import { toggleDark, gotoUrl, openUrl } from "~/composables"; //composablesÁªÑÂê
 
 <template>
   <el-row justify="center">
-    <el-col :span="10">
+    <el-col :span="9">
       <el-menu class="el-menu-demo" mode="horizontal" :ellipsis=false>
         <el-menu-item index="1" @click="$router.push('/')">LOG</el-menu-item>
         <!-- unocss -->

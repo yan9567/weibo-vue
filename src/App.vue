@@ -5,9 +5,7 @@
     <div class="flex main-container">
       <!--w py 都是unocss-->
       <el-row w="full" py="4" justify="center">
-        <el-col :span="10">
-          <!-- 路由出口 -->
-          <!-- 路由匹配到的组件将渲染在这里 -->
+        <el-col :span="9">
           <router-view></router-view>
         </el-col>
       </el-row>
@@ -17,7 +15,7 @@
 
 <style>
 #app {
-  text-align: center;
+  text-align: left;
   color: var(--ep-text-color-primary);
 }
 
