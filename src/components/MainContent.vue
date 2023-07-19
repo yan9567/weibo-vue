@@ -2,7 +2,7 @@
   <div class="main">
     <div class="flex justify-between flex-items-center">
       <p class="m0">记录你的生活吧</p>
-      <el-button type="" :icon="Plus" plain @click="AddOrSubmit">{{btnText}}</el-button>
+      <el-button type="" :icon="Plus" plain @click="AddOrSubmit">{{ btnText }}</el-button>
     </div>
     <Transition name="fade">
       <el-input class="my2" type="textarea" :rows="4" v-model="texts" v-if="isEditing" placeholder="想说些什么..." />
@@ -13,20 +13,21 @@
       <WeiboView v-bind="weibo" />
     </div>
     <el-row justify="center" class="my5">
-      <el-pagination class="ml-a mr-a" layout="prev, pager, next" :total="50" />
+      <el-pagination class="ml-a mr-a" layout="prev, pager, next" :total="50" @prev-click="MessageFun('hello', 'info')" />
     </el-row>
   </div>
 </template>
   
 <script lang="ts" setup>
 import { Plus, Check } from '@element-plus/icons-vue'
-import { computed, ref, shallowRef } from 'vue';
-import "~/styles/index.scss";
+import { computed, onMounted, ref, shallowRef } from 'vue';
 import WeiboView from "./Weibo.vue"
 import Weibo from "~/store/modules/Weibo"
 import { ElButton } from 'element-plus';
+import { MessageFun } from "~/composables/index";
+import { weiboapi } from "~/api/index";
 
-const texts = ref('')
+const texts = ref('');
 
 const weibos = ref<Weibo[]>(
   [
@@ -55,15 +56,15 @@ const weibos = ref<Weibo[]>(
       Context: 'helloworld\n简化流程： 设计简洁直观的操作流程； 清晰明确： 语言表达清晰且表意明确，让用户快速理解进而作出决策； 帮助用户识别： 界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。'
     }
   ]
-)
+);
 
 let isEditing = ref(false);
 const btnText = computed(() => {
   return isEditing.value ? '提交' : '新建'
-})
+});
 
 //保存
-function AddOrSubmit(event: Event) {
+const AddOrSubmit = (event: Event) => {
   let btn = event.target as HTMLButtonElement;
   if (!btn) return;
   if (isEditing.value && texts.value.length > 0) {
@@ -79,6 +80,18 @@ function AddOrSubmit(event: Event) {
   isEditing.value = !isEditing.value;
 }
 
+//初始化
+onMounted(() => {
+  console.log(`the component is now mounted.`);
+  weiboapi.Page(0)
+  .then(response => {
+    console.log('success', response.data);
+  })
+  .catch(error => {
+    console.log('error', error);
+  })
+
+})
 
 </script>
 
