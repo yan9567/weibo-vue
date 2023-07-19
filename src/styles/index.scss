@@ -2,9 +2,9 @@
 @use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
 
 //全局css变量
-// :root {
-//   --ep-color-primary: red;
-// }
+:root {
+  --ep-text-light: #666;
+}
 
 body {
   font-family: Inter, system-ui, Avenir, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
