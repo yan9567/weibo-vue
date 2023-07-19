@@ -2,24 +2,29 @@
   <div class="main">
     <div class="flex justify-between flex-items-center">
       <p class="m0">记录你的生活吧</p>
-      <el-button type="" :icon="Edit" plain>新建</el-button>
+      <el-button type="" :icon="Plus" plain @click="AddOrSubmit">{{btnText}}</el-button>
     </div>
-    <el-input class="my2" type="textarea" :rows="4" v-model="texts" placeholder="想说些什么..." />
-
+    <Transition name="fade">
+      <el-input class="my2" type="textarea" :rows="4" v-model="texts" v-if="isEditing" placeholder="想说些什么..." />
+    </Transition>
     <!--https://images.nowcoder.com/head/1000t.png-->
     <div class="ul m0 p0" v-for="(weibo, index) in weibos">
       <div class="divider" v-if="index != 0"></div>
-      <WeiboView v-bind="weibo"/>
+      <WeiboView v-bind="weibo" />
     </div>
+    <el-row justify="center" class="my5">
+      <el-pagination class="ml-a mr-a" layout="prev, pager, next" :total="50" />
+    </el-row>
   </div>
 </template>
   
 <script lang="ts" setup>
-import { Edit } from '@element-plus/icons-vue'
-import { ref } from 'vue';
+import { Plus, Check } from '@element-plus/icons-vue'
+import { computed, ref, shallowRef } from 'vue';
 import "~/styles/index.scss";
 import WeiboView from "./Weibo.vue"
 import Weibo from "~/store/modules/Weibo"
+import { ElButton } from 'element-plus';
 
 const texts = ref('')
 
@@ -52,6 +57,27 @@ const weibos = ref<Weibo[]>(
   ]
 )
 
+let isEditing = ref(false);
+const btnText = computed(() => {
+  return isEditing.value ? '提交' : '新建'
+})
+
+//保存
+function AddOrSubmit(event: Event) {
+  let btn = event.target as HTMLButtonElement;
+  if (!btn) return;
+  if (isEditing.value && texts.value.length > 0) {
+    let time = new Date().toLocaleString();
+    weibos.value.push({
+      ID: '1',
+      Auther: 'admin',
+      Date: time,
+      Context: texts.value
+    });
+    texts.value = '';
+  }
+  isEditing.value = !isEditing.value;
+}
 
 
 </script>
@@ -61,6 +87,21 @@ const weibos = ref<Weibo[]>(
   width: auto;
   border-top: 1px solid var(--ep-border-color);
   margin-left: calc(48px + 20px);
+}
+
+.fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.fade-leave-active {
+  // transition: opacity 0.5s ease;
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  transform: translateY(-10px);
+  opacity: 0;
 }
 </style>
   
