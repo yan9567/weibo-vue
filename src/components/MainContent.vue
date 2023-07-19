@@ -15,7 +15,6 @@
       <el-pagination class="ml-a mr-a" layout="prev, pager, next" :page-size="15" :total="50" @prev-click="prev"
         @next-click="next" @current-change="pageto"/>
     </el-row>
-    <el-backtop :right="100" :bottom="100" />
   </div>
 </template>
   
