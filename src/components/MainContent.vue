@@ -7,14 +7,15 @@
     <Transition name="fade">
       <el-input class="my2" type="textarea" :rows="4" v-model="texts" v-if="isEditing" placeholder="想说些什么..." />
     </Transition>
-    <!--https://images.nowcoder.com/head/1000t.png-->
     <div class="ul m0 p0" v-for="(weibo, index) in weibos">
       <div class="divider" v-if="index != 0"></div>
       <WeiboView v-bind="weibo" />
     </div>
     <el-row justify="center" class="my5">
-      <el-pagination class="ml-a mr-a" layout="prev, pager, next" :total="50" @prev-click="MessageFun('hello', 'info')" />
+      <el-pagination class="ml-a mr-a" layout="prev, pager, next" :page-size="15" :total="50" @prev-click="prev"
+        @next-click="next" @current-change="pageto"/>
     </el-row>
+    <el-backtop :right="100" :bottom="100" />
   </div>
 </template>
   
@@ -24,39 +25,13 @@ import { computed, onMounted, ref, shallowRef } from 'vue';
 import WeiboView from "./Weibo.vue"
 import Weibo from "~/store/modules/Weibo"
 import { ElButton } from 'element-plus';
-import { MessageFun } from "~/composables/index";
+import { MessageFun, NotificationFun } from "~/composables/index";
 import { weiboapi } from "~/api/index";
 
 const texts = ref('');
-
-const weibos = ref<Weibo[]>(
-  [
-    {
-      ID: '0',
-      Auther: 'Auther',
-      Date: '2023-07-19 10:51:05',
-      Context: 'helloworld\r\n简化流程： 设计简洁直观的操作流程； 清晰明确： 语言表达清晰且表意明确，让用户快速理解进而作出决策； 帮助用户识别： 界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。'
-    },
-    {
-      ID: '1',
-      Auther: 'Auther',
-      Date: '2023-07-19 10:51:05',
-      Context: 'helloworld\n简化流程： 设计简洁直观的操作流程； 清晰明确： 语言表达清晰且表意明确，让用户快速理解进而作出决策； 帮助用户识别： 界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。'
-    },
-    {
-      ID: '2',
-      Auther: 'Auther',
-      Date: '2023-07-19 10:51:05',
-      Context: 'helloworld\n简化流程： 设计简洁直观的操作流程； 清晰明确： 语言表达清晰且表意明确，让用户快速理解进而作出决策； 帮助用户识别： 界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。'
-    },
-    {
-      ID: '3',
-      Auther: 'Auther',
-      Date: '2023-07-19 10:51:05',
-      Context: 'helloworld\n简化流程： 设计简洁直观的操作流程； 清晰明确： 语言表达清晰且表意明确，让用户快速理解进而作出决策； 帮助用户识别： 界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。'
-    }
-  ]
-);
+const currentPage = ref(0);
+const totalCount = ref(100);
+const weibos = ref<Weibo[]>();
 
 let isEditing = ref(false);
 const btnText = computed(() => {
@@ -69,13 +44,15 @@ const AddOrSubmit = (event: Event) => {
   if (!btn) return;
   if (isEditing.value && texts.value.length > 0) {
     let time = new Date().toLocaleString();
+    //fixme 这里处理undfined
     weibos.value.push({
-      ID: '1',
-      Auther: 'admin',
-      Date: time,
-      Context: texts.value
+      id: '1',
+      auther: 'admin',
+      time: time,
+      content: texts.value
     });
     texts.value = '';
+    setWeibo();
   }
   isEditing.value = !isEditing.value;
 }
@@ -83,16 +60,42 @@ const AddOrSubmit = (event: Event) => {
 //初始化
 onMounted(() => {
   console.log(`the component is now mounted.`);
-  weiboapi.Page(0)
-  .then(response => {
-    console.log('success', response.data);
-  })
-  .catch(error => {
-    console.log('error', error);
-  })
-
+  setWeibo();
 })
 
+//更新微博内容
+const setWeibo = (page: number = 0) => {
+  if (page < 0) page = 0;
+  weiboapi.Page(page)
+    .then((response: { data: Weibo[]; }) => {
+      if (response.data) {
+        weibos.value = response.data;
+      }
+    })
+    .catch((error: string) => {
+      console.log('error', error);
+      NotificationFun(error, '请求内容失败', 'error');
+    })
+}
+
+const prev = () => {
+  if (currentPage.value > 0) {
+    currentPage.value--;
+    setWeibo(currentPage.value);
+  }
+}
+
+const next = () => {
+  if (totalCount.value / 15 > currentPage.value) {
+    currentPage.value++;
+    setWeibo(currentPage.value);
+  }
+}
+
+const pageto = (index: number) => {
+  currentPage.value = index - 1;
+  setWeibo(currentPage.value);
+}
 </script>
 
 <style lang="scss" scoped>

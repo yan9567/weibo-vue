@@ -1,11 +1,10 @@
-
 interface Weibo {
-    ID: string
-    Auther: string
-    Date: string
-    Context: string
-    UserID?: string
-    UserHead?: string
-  }
+  auther: string
+  content: string
+  id: string
+  time: string
+  userId?: string
+  userHead?: string
+}
 
-  export default Weibo
+export default Weibo
