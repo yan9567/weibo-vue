@@ -45,7 +45,6 @@ import { Plus, Check } from '@element-plus/icons-vue'
 import { computed, onMounted, ref, shallowRef } from 'vue';
 import WeiboView from "./Weibo.vue"
 import Weibo from "~/store/modules/Weibo"
-import { ElButton, ElNotification } from 'element-plus';
 import { MessageFun, NotificationFun } from "~/composables/index";
 import { weiboapi } from "~/api/index";
 
@@ -60,20 +59,11 @@ const btnText = computed(() => {
   return isEditing.value ? '提交' : '新建'
 });
 
-const open4 = () => {
-  ElNotification({
-    title: 'Error',
-    message: 'This is an error message',
-    type: 'error',
-  })
-}
-
 /**
  * 保存
  * @param event 按钮事件
  */
 const AddOrSubmit = (event: Event) => {
-  open4();
   let btn = event.target as HTMLButtonElement;
   if (!btn) return;
   if (isEditing.value && texts.value.length > 0) {
