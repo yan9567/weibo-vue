@@ -8,4 +8,12 @@ const login = (username: string, password: string) => {
   });
 }
 
-export { login };
+const regist = (username: string, password: string) => {
+  return request({
+    url: '/users',
+    method: 'post',
+    data: { username, password }
+  });
+}
+
+export { login, regist };

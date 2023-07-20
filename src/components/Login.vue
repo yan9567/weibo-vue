@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { type FormInstance, type FormRules } from 'element-plus'
 import { loginapi } from "~/api/index"
-import {MessageFun} from "~/composables/notify"
+import { MessageFun, NotificationFun } from "~/composables/notify"
 import useUserStore from "~/store/UserInfo";
 import UserInfo from '~/store/modules/User';
-import router from '~/routers';
 
 const userStore = useUserStore();
 interface User {
@@ -31,22 +30,19 @@ const rules = reactive<FormRules<User>>({
   ]
 });
 
-const toast = () => {
-  ElMessage.success("未实现");
-};
 
 /**
  * 登录
- * @param formEl 
+ * @param formEl 表格DOM
  */
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       console.log('submit!')
-      try{
+      try {
         let ret = await loginapi.login(user.username, user.password);
-        let userinfo : UserInfo = {
+        let userinfo: UserInfo = {
           username: user.username,
           token: ret.data.token,
           role: "admin",
@@ -54,7 +50,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         }
         userStore.Login(userinfo);
       }
-      catch( error: any ){
+      catch (error: any) {
         MessageFun('登录失败', 'error');
       }
     } else {
@@ -70,6 +66,17 @@ const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
 }
+
+const regist = async () => {
+  try {
+    await loginapi.regist(user.username, user.password);
+    MessageFun('注册成功', 'success');
+  }
+  catch (error: any) {
+    NotificationFun(error.message as string, '注册失败', 'error');
+  }
+}
+
 </script>
 
 <template>
@@ -85,7 +92,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
     <el-form-item label=" ">
       <el-button type="primary" @click="submitForm(formRef)">登录</el-button>
-      <el-button @click="toast">注册</el-button>
+      <el-button @click="regist">注册</el-button>
     </el-form-item>
 
   </el-form>
