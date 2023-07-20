@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import Weibo from "~/store/modules/Weibo"
 
 const weibo = defineProps<Weibo>()

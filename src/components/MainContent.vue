@@ -7,13 +7,35 @@
     <Transition name="fade">
       <el-input class="my2" type="textarea" :rows="4" v-model="texts" v-if="isEditing" placeholder="想说些什么..." />
     </Transition>
-    <div class="ul m0 p0" v-for="(weibo, index) in weibos">
-      <div class="divider" v-if="index != 0"></div>
-      <WeiboView v-bind="weibo" />
-    </div>
+    <!--主内容-->
+    <el-skeleton style="width: auto" :loading="loading" animated :throttle="500">
+      <template #template>
+        <div v-for="(item, index) in 3">
+          <div class="divider my1" v-if="index != 0"></div>
+          <el-skeleton-item variant="image" style="width: 48px; height: 48px; float: left; margin-top: 0.3rem;" />
+          <div style="padding-left: 68px">
+            <el-skeleton-item variant="p" style="width: 80%; margin: 0.3rem 0" />
+            <el-skeleton-item variant="p" style="width: 50%; margin: 0.3rem 0" />
+            <el-skeleton-item variant="p" style="width: 90%; margin: 0.3rem 0" />
+            <el-skeleton-item variant="p" style="width: 60%; margin: 0.3rem 0" />
+          </div>
+        </div>
+
+      </template>
+      <template #default>
+        <div class="ul m0 p0" v-for="(weibo, index) in weibos">
+          <div class="divider" v-if="index != 0"></div>
+          <WeiboView v-bind="weibo" />
+        </div>
+      </template>
+    </el-skeleton>
+
+    <!--空页面-->
+    <el-empty description="说点什么吧~" v-if="!loading && (!weibos || weibos.length === 0)" />
+    <!--分页-->
     <el-row justify="center" class="my5">
       <el-pagination class="ml-a mr-a" layout="prev, pager, next" :page-size="15" :total="50" @prev-click="prev"
-        @next-click="next" @current-change="pageto"/>
+        @next-click="next" @current-change="pageto" />
     </el-row>
   </div>
 </template>
@@ -31,13 +53,17 @@ const texts = ref('');
 const currentPage = ref(0);
 const totalCount = ref(100);
 const weibos = ref<Weibo[]>();
-
+const loading = ref(true);
 let isEditing = ref(false);
+
 const btnText = computed(() => {
   return isEditing.value ? '提交' : '新建'
 });
 
-//保存
+/**
+ * 保存
+ * @param event 按钮事件
+ */
 const AddOrSubmit = (event: Event) => {
   let btn = event.target as HTMLButtonElement;
   if (!btn) return;
@@ -56,13 +82,15 @@ const AddOrSubmit = (event: Event) => {
   isEditing.value = !isEditing.value;
 }
 
-//初始化
+/**初始化 */
 onMounted(() => {
-  console.log(`the component is now mounted.`);
   setWeibo();
 })
 
-//更新微博内容
+/**
+ * 更新微博内容
+ * @param page 页码
+ */
 const setWeibo = (page: number = 0) => {
   if (page < 0) page = 0;
   weiboapi.Page(page)
@@ -71,12 +99,20 @@ const setWeibo = (page: number = 0) => {
         weibos.value = response.data;
       }
     })
-    .catch((error: string) => {
+    .catch((error: any) => {
       console.log('error', error);
       NotificationFun(error, '请求内容失败', 'error');
     })
+    .finally(() => {
+      if (loading.value) {
+        loading.value = false;
+      }
+    });
 }
 
+/**
+ * 上一页
+ */
 const prev = () => {
   if (currentPage.value > 0) {
     currentPage.value--;
@@ -84,6 +120,9 @@ const prev = () => {
   }
 }
 
+/**
+ * 下一页
+ */
 const next = () => {
   if (totalCount.value / 15 > currentPage.value) {
     currentPage.value++;
@@ -91,6 +130,10 @@ const next = () => {
   }
 }
 
+/**
+ * 跳转页码
+ * @param index 页码（前台显示1始）
+ */
 const pageto = (index: number) => {
   currentPage.value = index - 1;
   setWeibo(currentPage.value);
