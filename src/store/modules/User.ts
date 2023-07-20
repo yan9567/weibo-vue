@@ -1,5 +1,5 @@
 interface UserInfo {
-    ID?: string
+    id?: string
     headUrl?: string
     username: string
     token: string

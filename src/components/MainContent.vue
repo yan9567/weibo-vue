@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+
     <div class="flex justify-between flex-items-center">
       <p class="m0">记录你的生活吧</p>
       <el-button type="" :icon="Plus" plain @click="AddOrSubmit">{{ btnText }}</el-button>
@@ -7,8 +8,9 @@
     <Transition name="fade">
       <el-input class="my2" type="textarea" :rows="4" v-model="texts" v-if="isEditing" placeholder="想说些什么..." />
     </Transition>
-    <!--主内容-->
+
     <el-skeleton style="width: auto" :loading="loading" animated :throttle="500">
+      <!--鱼骨图-->
       <template #template>
         <div v-for="(item, index) in 3">
           <div class="divider my1" v-if="index != 0"></div>
@@ -20,12 +22,13 @@
             <el-skeleton-item variant="p" style="width: 60%; margin: 0.3rem 0" />
           </div>
         </div>
-
       </template>
+
+      <!--主内容-->
       <template #default>
         <div class="ul m0 p0" v-for="(weibo, index) in weibos">
           <div class="divider" v-if="index != 0"></div>
-          <WeiboView v-bind="weibo" />
+          <WeiboView :weibo="weibo" :Delete="Delete" />
         </div>
       </template>
     </el-skeleton>
@@ -47,7 +50,9 @@ import WeiboView from "./Weibo.vue"
 import Weibo from "~/store/modules/Weibo"
 import { MessageFun, NotificationFun } from "~/composables/index";
 import { weiboapi } from "~/api/index";
+import useUserStore from '~/store/UserInfo';
 
+const userStore = useUserStore();
 const texts = ref('');
 const currentPage = ref(0);
 const totalCount = ref(100);
@@ -66,8 +71,11 @@ const btnText = computed(() => {
 const AddOrSubmit = (event: Event) => {
   let btn = event.target as HTMLButtonElement;
   if (!btn) return;
+  if (!isEditing.value && !userStore.state) {
+    MessageFun('请先登录', 'warning');
+    return;
+  }
   if (isEditing.value && texts.value.length > 0) {
-    let time = new Date().toLocaleString();
     Add(texts.value);
   }
   isEditing.value = !isEditing.value;
@@ -78,16 +86,36 @@ onMounted(() => {
   Flush();
 })
 
+/**
+ * 新增
+ * @param content 内容
+ */
 const Add = async (content: string) => {
-  if(!content || content.length === 0) return;
-  try{
+  if (!content || content.length === 0) return;
+  try {
     await weiboapi.Add(content);
     texts.value = '';
     Flush();
   }
-  catch(error: any){
+  catch (error: any) {
     NotificationFun(error.message as string, '保存内容失败', 'error');
-    console.log(error);
+  }
+}
+
+/**
+ * 删除
+ * @param id 
+ */
+const Delete = async (id: string) => {
+  if (!id) return;
+  if (!userStore.state) return;
+
+  try {
+    await weiboapi.Delete(id);
+    Flush();
+  }
+  catch (error: any) {
+    NotificationFun(error.message as string, '删除失败', 'error');
   }
 }
 

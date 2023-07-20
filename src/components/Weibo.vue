@@ -1,18 +1,32 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import Weibo from "~/store/modules/Weibo"
+import useUserStore from "~/store/UserInfo";
 
-const weibo = defineProps<Weibo>()
+const userStore = useUserStore();
+const props = defineProps<{
+  weibo: Weibo,
+  Delete: (id: string) => Promise<void>,
+}>();
 
 const date = computed(() => {
-  return new Date(weibo.time).toLocaleString('zh-cn');
+  return new Date(props.weibo.time).toLocaleString('zh-cn');
+});
+
+/**
+ * 删除权限
+ * style里用v-bind(visibility)绑定，测试string绑定有效，bool无效
+ */
+const visibility = computed(() => {
+  if (!userStore.state) return 'collapse';
+  return props.weibo.auther === userStore.state.username ? 'visible' : 'collapse';
 });
 
 </script>
 
 <template>
   <div class="li">
-    <el-avatar class="float-left mr-20px" fit="cover" shape="square" :size="48" :src="weibo.userHead">
+    <el-avatar class="float-left mr-20px" fit="cover" shape="square" :size="48" :src="props.weibo.userHead">
       <!-- 兜底：文字、图片 -->
       <!-- {{ weibo.auther }} -->
       <!--https://images.nowcoder.com/head/1000t.png-->
@@ -20,21 +34,41 @@ const date = computed(() => {
     </el-avatar>
     <div class="article">
       <div class="header">
-        <div class="mr-2 inline-block">{{ weibo.auther }}</div>
+        <div class="mr-2 inline-block">{{ props.weibo.auther }}</div>
         <span>{{ date }}</span>
+        
+        <!--删除按钮-->
+        <el-popconfirm title="是否删除?" @confirm="Delete(props.weibo.id)">
+          <template #reference>
+            <el-button class="btn" link type="info" size="small">
+              删除
+            </el-button>
+          </template>
+        </el-popconfirm>
+
       </div>
       <el-text class="post">
-        {{ weibo.content }}
+        {{ props.weibo.content }}
       </el-text>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .li {
-
   padding: 10px 0;
   position: relative;
 
+  .btn{
+    float: right;
+    visibility: collapse;
+  }
+  &:hover {
+    .btn {
+      visibility: v-bind(visibility);
+    }
+  }
+
+  // 生成分隔线，此处改外部生成，方便控制是否生成
   // &::before {
   //   position: absolute;
   //   background-color: var(--ep-border-color);

@@ -19,7 +19,8 @@ const Add = (content: string) => {
   return request({
     url: 'contentlist',
     method: 'post',
-    headers: {'Authorization': 'bearer ' + userStore.state?.token},
+    //Authorization只能在这传，在axiosConfig里已生成了实例，在那无法更新
+    headers: {...{'Authorization': 'bearer ' + userStore.state?.token}},
     data: {
       content: content,
       time: new Date(),
@@ -28,7 +29,12 @@ const Add = (content: string) => {
 };
 
 const Delete = (id: string) => {
-
+  return request({
+    url: 'contentlist/' + id,
+    method: 'delete',
+    //Authorization只能在这传，在axiosConfig里已生成了实例，在那无法更新
+    headers: {...{'Authorization': 'bearer ' + userStore.state?.token}},
+  });
 };
 
 export { Page, Add, Delete }
