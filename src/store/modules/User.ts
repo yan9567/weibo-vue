@@ -1,7 +1,9 @@
-interface User{
-    ID: string
-    headUrl: string
+interface UserInfo {
+    ID?: string
+    headUrl?: string
     username: string
-    password: string
+    token: string
+    role: "user" | "admin"
+    lastlogin?: Date
 }
-export default User;
+export default UserInfo;

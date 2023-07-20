@@ -3,7 +3,11 @@ import { reactive, ref } from 'vue';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { loginapi } from "~/api/index"
 import {MessageFun} from "~/composables/notify"
+import useUserStore from "~/store/UserInfo";
+import UserInfo from '~/store/modules/User';
+import router from '~/routers';
 
+const userStore = useUserStore();
 interface User {
   username: string
   password: string
@@ -40,10 +44,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       console.log('submit!')
-      //TODO 登录操作
       try{
         let ret = await loginapi.login(user.username, user.password);
-        console.log(ret.data);
+        let userinfo : UserInfo = {
+          username: user.username,
+          token: ret.data.token,
+          role: "admin",
+          // lastlogin: new Date()
+        }
+        userStore.setUser(userinfo);
       }
       catch( error: any ){
         MessageFun('登录失败', 'error');

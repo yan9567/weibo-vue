@@ -30,6 +30,7 @@ declare module 'vue' {
     Login: typeof import('./components/Login.vue')['default']
     Logos: typeof import('./components/Logos.vue')['default']
     MainContent: typeof import('./components/MainContent.vue')['default']
+    Profile: typeof import('./components/Profile.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Weibo: typeof import('./components/Weibo.vue')['default']

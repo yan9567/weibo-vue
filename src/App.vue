@@ -24,3 +24,23 @@
   height: calc(100vh - var(--ep-menu-item-height) - 3px);
 }
 </style>
+
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import useUserStore from '~/store/UserInfo';
+import UserInfo from '~/store/modules/User';
+
+const userStore = useUserStore();
+
+const InitUser = () =>{
+  let local = window.localStorage.getItem('user');
+  if(local){
+    let userinfo = JSON.parse(local) as UserInfo;
+    userStore.setUser(userinfo);
+  }
+}
+
+onMounted(() => {
+  InitUser();
+});
+</script>

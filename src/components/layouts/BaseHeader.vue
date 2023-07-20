@@ -1,5 +1,19 @@
 <script lang="ts" setup>
 import { toggleDark, gotoUrl, openUrl } from "~/composables"; //composables组合式函数，类似uitls
+import useUserStore from "~/store/UserInfo";
+import router from "~/routers";
+
+const userStore = useUserStore();
+
+const HandlerClick = () => {
+  if(userStore.state){
+    router.push('/profile')
+  }
+  else{
+    router.push('/login')
+  }
+}
+
 </script>
 
 <template>
@@ -9,7 +23,7 @@ import { toggleDark, gotoUrl, openUrl } from "~/composables"; //composables组�
         <el-menu-item index="1" @click="$router.push('/')">LOG</el-menu-item>
         <!-- unocss -->
         <div class="flex-1" />
-        <el-menu-item index="2" @click="$router.push('/login')">Login</el-menu-item>
+        <el-menu-item index="2" @click="HandlerClick">{{ userStore.state ? userStore.state?.username : 'Login' }}</el-menu-item>
         <el-menu-item index="3" @click="gotoUrl('https://blog.ppos.top')">Blog</el-menu-item>
         <el-sub-menu index="4">
           <template #title>Others</template>
