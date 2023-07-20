@@ -36,7 +36,7 @@ const InitUser = () =>{
   let local = window.localStorage.getItem('user');
   if(local){
     let userinfo = JSON.parse(local) as UserInfo;
-    userStore.setUser(userinfo);
+    userStore.Login(userinfo);
   }
 }
 

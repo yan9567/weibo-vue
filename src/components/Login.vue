@@ -52,7 +52,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           role: "admin",
           // lastlogin: new Date()
         }
-        userStore.setUser(userinfo);
+        userStore.Login(userinfo);
       }
       catch( error: any ){
         MessageFun('登录失败', 'error');

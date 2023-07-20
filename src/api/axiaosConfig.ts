@@ -30,7 +30,6 @@ service.interceptors.response.use(
 
     },
     error => {
-        console.log(error);
         // MessageFun('网络异常，请稍后再试', "error");
         return Promise.reject(error);
     }

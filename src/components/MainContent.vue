@@ -45,7 +45,7 @@ import { Plus, Check } from '@element-plus/icons-vue'
 import { computed, onMounted, ref, shallowRef } from 'vue';
 import WeiboView from "./Weibo.vue"
 import Weibo from "~/store/modules/Weibo"
-import { ElButton } from 'element-plus';
+import { ElButton, ElNotification } from 'element-plus';
 import { MessageFun, NotificationFun } from "~/composables/index";
 import { weiboapi } from "~/api/index";
 
@@ -60,38 +60,52 @@ const btnText = computed(() => {
   return isEditing.value ? '提交' : '新建'
 });
 
+const open4 = () => {
+  ElNotification({
+    title: 'Error',
+    message: 'This is an error message',
+    type: 'error',
+  })
+}
+
 /**
  * 保存
  * @param event 按钮事件
  */
 const AddOrSubmit = (event: Event) => {
+  open4();
   let btn = event.target as HTMLButtonElement;
   if (!btn) return;
   if (isEditing.value && texts.value.length > 0) {
     let time = new Date().toLocaleString();
-    //fixme 这里处理undfined
-    weibos.value.push({
-      id: '1',
-      auther: 'admin',
-      time: time,
-      content: texts.value
-    });
-    texts.value = '';
-    setWeibo();
+    Add(texts.value);
   }
   isEditing.value = !isEditing.value;
 }
 
 /**初始化 */
 onMounted(() => {
-  setWeibo();
+  Flush();
 })
+
+const Add = async (content: string) => {
+  if(!content || content.length === 0) return;
+  try{
+    await weiboapi.Add(content);
+    texts.value = '';
+    Flush();
+  }
+  catch(error: any){
+    NotificationFun(error.message as string, '保存内容失败', 'error');
+    console.log(error);
+  }
+}
 
 /**
  * 更新微博内容
  * @param page 页码
  */
-const setWeibo = (page: number = 0) => {
+const Flush = (page: number = 0) => {
   if (page < 0) page = 0;
   weiboapi.Page(page)
     .then((response: { data: Weibo[]; }) => {
@@ -116,7 +130,7 @@ const setWeibo = (page: number = 0) => {
 const prev = () => {
   if (currentPage.value > 0) {
     currentPage.value--;
-    setWeibo(currentPage.value);
+    Flush(currentPage.value);
   }
 }
 
@@ -126,7 +140,7 @@ const prev = () => {
 const next = () => {
   if (totalCount.value / 15 > currentPage.value) {
     currentPage.value++;
-    setWeibo(currentPage.value);
+    Flush(currentPage.value);
   }
 }
 
@@ -136,7 +150,7 @@ const next = () => {
  */
 const pageto = (index: number) => {
   currentPage.value = index - 1;
-  setWeibo(currentPage.value);
+  Flush(currentPage.value);
 }
 </script>
 
