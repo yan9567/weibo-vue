@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { loginapi } from "~/api/index"
+import {MessageFun} from "~/composables/notify"
 
 interface User {
   username: string
@@ -29,17 +31,32 @@ const toast = () => {
   ElMessage.success("未实现");
 };
 
+/**
+ * 登录
+ * @param formEl 
+ */
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
       console.log('submit!')
       //TODO 登录操作
+      try{
+        let ret = await loginapi.login(user.username, user.password);
+        console.log(ret.data);
+      }
+      catch( error: any ){
+        MessageFun('登录失败', 'error');
+      }
     } else {
       console.log('error submit!', fields)
     }
   })
 }
+/**
+ * 清空
+ * @param formEl 
+ */
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
