@@ -9,8 +9,7 @@ import * as VueRouter from 'vue-router'
 
 
 const routes = [
-    { path: '/', component: import("../components/MainContent.vue") },  //这里是路由懒加载，使访问更加高效
-    { path: '/logs', component: import("../components/Logos.vue") },
+    { path: '/', component: import("../components/WeiboContainer.vue") },  //这里是路由懒加载，使访问更加高效
     { path: '/login', component: import("../components/Login.vue")},
     { path: '/profile', component: import("../components/Profile.vue")},
     {

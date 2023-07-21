@@ -3,8 +3,9 @@
 
     <div class="flex justify-between flex-items-center">
       <p class="m0">记录你的生活吧</p>
-      <el-button type="" :icon="Plus" plain @click="AddOrSubmit">{{ btnText }}</el-button>
+      <el-button type="" :icon="Plus" plain @click="AddOrSubmit" size="small">{{ btnText }}</el-button>
     </div>
+
     <Transition name="fade">
       <el-input class="my2" type="textarea" :rows="4" v-model="texts" v-if="isEditing" placeholder="想说些什么..." />
     </Transition>
@@ -40,7 +41,11 @@
       <el-pagination class="ml-a mr-a" layout="prev, pager, next" :page-size="15" :total="50" @prev-click="prev"
         @next-click="next" @current-change="pageto" />
     </el-row>
-  </div>
+    <el-row justify="space-around" class="my3 items-center">
+      <el-text size="default" style="color: var(--ep-color-info);">power by 果酱 with hair @ 2022</el-text>
+      <el-link type="info" :underline="false" href="http://beian.miit.gov.cn/">赣ICP备19013471号</el-link>
+    </el-row>
+  </div>  
 </template>
   
 <script lang="ts" setup>

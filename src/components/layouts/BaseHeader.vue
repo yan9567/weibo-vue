@@ -20,7 +20,7 @@ const HandlerClick = () => {
   <el-row justify="center">
     <el-col :span="9">
       <el-menu class="el-menu-demo" mode="horizontal" :ellipsis=false>
-        <el-menu-item index="1" @click="$router.push('/')">LOG</el-menu-item>
+        <el-menu-item index="1" @click="$router.push('/')">Home</el-menu-item>
         <!-- unocss -->
         <div class="flex-1" />
         <el-menu-item index="2" @click="HandlerClick">{{ userStore.state ? userStore.state?.username : 'Login' }}</el-menu-item>
