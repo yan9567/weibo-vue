@@ -15,7 +15,7 @@ const service = axios.create({
 //请求拦截器
 service.interceptors.request.use(
     config => {
-        config.baseURL = 'http://localhost:3001/api'//https://www.ppos.top/api';//'http://localhost:3001'
+        config.baseURL = import.meta.env.VITE_API;
         return config;
     },
     error => Promise.reject(error)

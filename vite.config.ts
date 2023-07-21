@@ -18,6 +18,7 @@ const pathSrc = path.resolve(__dirname, 'src')
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './', //这个是前端路径前缀
   resolve: {
     alias: {
       //路径使用别名
