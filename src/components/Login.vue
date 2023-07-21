@@ -68,8 +68,13 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const regist = async () => {
   try {
-    await loginapi.regist(user.username, user.password);
-    MessageFun('注册成功', 'success');
+    let ret = await loginapi.regist(user.username, user.password);
+    if(ret && ret.data.code === 1000){
+      MessageFun('注册成功', 'success');
+    }
+    else{
+      MessageFun(ret.data.msg, 'error');
+    }
   }
   catch (error: any) {
     NotificationFun(error.message as string, '注册失败', 'error');
