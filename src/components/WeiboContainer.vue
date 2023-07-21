@@ -38,14 +38,14 @@
     <el-empty description="说点什么吧~" v-if="!loading && (!weibos || weibos.length === 0)" />
     <!--分页-->
     <el-row justify="center" class="my5">
-      <el-pagination class="ml-a mr-a" layout="prev, pager, next" :page-size="15" :total="50" @prev-click="prev"
+      <el-pagination class="ml-a mr-a" layout="prev, pager, next" :page-size="15" :total="totalCount" @prev-click="prev"
         @next-click="next" @current-change="pageto" />
     </el-row>
     <el-row justify="space-around" class="my3 items-center">
       <el-text size="default" style="color: var(--ep-color-info);">power by 果酱 with hair @ 2022</el-text>
       <el-link type="info" :underline="false" href="http://beian.miit.gov.cn/">赣ICP备19013471号</el-link>
     </el-row>
-  </div>  
+  </div>
 </template>
   
 <script lang="ts" setup>
@@ -131,9 +131,10 @@ const Delete = async (id: string) => {
 const Flush = (page: number = 0) => {
   if (page < 0) page = 0;
   weiboapi.Page(page)
-    .then((response: { data: Weibo[]; }) => {
-      if (response.data) {
-        weibos.value = response.data;
+    .then((response: { data: { total: number, data: Weibo[] }; }) => {
+      if (response.data.data) {
+        weibos.value = response.data.data;
+        totalCount.value = response.data.total;
       }
     })
     .catch((error: any) => {
