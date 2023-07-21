@@ -14,7 +14,9 @@
     "paths": {
       "~/*": ["src/*"]
     },
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    //全局导入element-plush类型
+    //"types": ["element-plus/global"]
   },
   "vueCompilerOptions": {
     "target": 3
