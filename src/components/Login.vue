@@ -39,7 +39,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log('submit!')
       try {
         let ret = await loginapi.login(user.username, user.password);
         let userinfo: UserInfo = {
