@@ -2,7 +2,9 @@
 import { computed, ref } from "vue";
 import Weibo from "~/store/modules/Weibo"
 import useUserStore from "~/store/UserInfo";
+import usePicsStore from "~/store/UserPic";
 
+const picStore = usePicsStore();
 const userStore = useUserStore();
 const props = defineProps<{
   weibo: Weibo,
@@ -12,6 +14,10 @@ const props = defineProps<{
 const date = computed(() => {
   return new Date(props.weibo.time).toLocaleString('zh-cn');
 });
+
+const pic = computed(() => {
+  return picStore.pics.get(props.weibo.auther);
+})
 
 /**
  * 删除权限
@@ -26,7 +32,7 @@ const visibility = computed(() => {
 
 <template>
   <div class="li">
-    <el-avatar class="float-left mr-20px" fit="cover" shape="square" :size="48" :src="props.weibo.userHead">
+    <el-avatar class="float-left mr-20px" fit="cover" shape="square" :size="48" :src="pic">
       <!-- 兜底：文字、图片 -->
       <!-- {{ weibo.auther }} -->
       <!--https://images.nowcoder.com/head/1000t.png-->

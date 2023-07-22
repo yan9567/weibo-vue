@@ -20,7 +20,7 @@ const Add = (content: string) => {
     url: 'contentlist',
     method: 'post',
     //Authorization只能在这传，在axiosConfig里已生成了实例，在那无法更新
-    headers: {...{'Authorization': 'bearer ' + userStore.state?.token}},
+    headers: { ...{ 'Authorization': 'bearer ' + userStore.state?.token } },
     data: {
       content: content,
       time: new Date(),
@@ -33,7 +33,7 @@ const Delete = (id: string) => {
     url: 'contentlist/' + id,
     method: 'delete',
     //Authorization只能在这传，在axiosConfig里已生成了实例，在那无法更新
-    headers: {...{'Authorization': 'bearer ' + userStore.state?.token}},
+    headers: { ...{ 'Authorization': 'bearer ' + userStore.state?.token } },
   });
 };
 

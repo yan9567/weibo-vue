@@ -16,4 +16,11 @@ const regist = (username: string, password: string) => {
   });
 }
 
-export { login, regist };
+const all = () => {
+  return request({
+    url: '/users',
+    method: 'get',
+  });
+}
+
+export { login, regist, all };

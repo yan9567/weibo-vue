@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import { type FormInstance, type FormRules } from 'element-plus'
-import { loginapi } from "~/api/index"
+import { userapi } from "~/api/index"
 import { MessageFun, NotificationFun } from "~/composables/notify"
 import useUserStore from "~/store/UserInfo";
 import UserInfo from '~/store/modules/User';
@@ -40,12 +40,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       try {
-        let ret = await loginapi.login(user.username, user.password);
+        let ret = await userapi.login(user.username, user.password);
         let userinfo: UserInfo = {
           username: user.username,
           token: ret.data.token,
           role: "admin",
-          // lastlogin: new Date()
+          lastlogin: ret.data.lastlogin,
+          headUrl : ret.data.headUrl
         }
         userStore.Login(userinfo);
       }
@@ -68,7 +69,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const regist = async () => {
   try {
-    await loginapi.regist(user.username, user.password);
+    await userapi.regist(user.username, user.password);
     MessageFun('注册成功', 'success');
   }
   catch (error: any) {

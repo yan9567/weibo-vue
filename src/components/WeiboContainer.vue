@@ -56,7 +56,9 @@ import Weibo from "~/store/modules/Weibo"
 import { MessageFun, NotificationFun } from "~/composables/index";
 import { weiboapi } from "~/api/index";
 import useUserStore from '~/store/UserInfo';
+import usePicsStore from '~/store/UserPic';
 
+const picStore = usePicsStore();
 const userStore = useUserStore();
 const texts = ref('');
 const currentPage = ref(0);
@@ -89,7 +91,9 @@ const AddOrSubmit = (event: Event) => {
 /**初始化 */
 onMounted(() => {
   Flush();
+  picStore.initPics();
 })
+
 
 /**
  * 新增
@@ -131,10 +135,10 @@ const Delete = async (id: string) => {
 const Flush = (page: number = 0) => {
   if (page < 0) page = 0;
   weiboapi.Page(page)
-    .then((response: { data: { total: number, list: Weibo[] } }) => {
+    .then((response: { data: { total: string, list: Weibo[] } }) => {
       if (response.data) {
         weibos.value = response.data.list;
-        totalCount.value = response.data.total;
+        totalCount.value = parseInt(response.data.total);
       }
     })
     .catch((error: any) => {

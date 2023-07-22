@@ -1,2 +1,2 @@
 export * as weiboapi from "./weibo"
-export * as loginapi from "./login"
+export * as userapi from "./user"
