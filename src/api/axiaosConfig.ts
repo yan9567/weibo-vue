@@ -1,6 +1,9 @@
 import axios from "axios";
 import qs from "qs";
 import { MessageFun, NotificationFun } from "~/composables/index";
+import useUserStore from "~/store/UserInfo";
+
+const userStore = useUserStore();
 
 //axios实例
 const service = axios.create({
@@ -36,6 +39,11 @@ service.interceptors.response.use(
 
     },
     error => {
+        //Token无效
+        if(error.response.status === 401){
+            userStore.Logout();
+            NotificationFun(error.response.data.msg, '请求失败', "error");
+        }
         NotificationFun(error, '请求失败', "error");
         return Promise.reject(error);
     }
