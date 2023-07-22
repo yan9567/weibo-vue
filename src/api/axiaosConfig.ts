@@ -1,12 +1,12 @@
 import axios from "axios";
 import qs from "qs";
-import { MessageFun } from "~/composables/index";
+import { MessageFun, NotificationFun } from "~/composables/index";
 
 //axios实例
 const service = axios.create({
     withCredentials: false,
     timeout: 1000,
-    headers: {"Content-Type": "application/json"},
+    headers: { "Content-Type": "application/json" },
     paramsSerializer: (params) => {
         return qs.stringify(params);
     },
@@ -26,11 +26,17 @@ service.interceptors.response.use(
     response => {
         let { data, headers, config } = response;
         if(headers['content-type'] === 'audio/mpeg') return data;
-        return response;
+        if(response.status != 200) return response;
+        if(response.data.code === 1000){
+            return response.data;
+        }
+        else{
+            return Promise.reject(new Error(response.data.msg))
+        }
 
     },
     error => {
-        // MessageFun('网络异常，请稍后再试', "error");
+        NotificationFun(error, '请求失败', "error");
         return Promise.reject(error);
     }
 );

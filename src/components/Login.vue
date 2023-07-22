@@ -50,7 +50,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         userStore.Login(userinfo);
       }
       catch (error: any) {
-        MessageFun('登录失败', 'error');
+        MessageFun(error, 'error');
       }
     } else {
       console.log('error submit!', fields)
@@ -68,16 +68,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const regist = async () => {
   try {
-    let ret = await loginapi.regist(user.username, user.password);
-    if(ret && ret.data.code === 1000){
-      MessageFun('注册成功', 'success');
-    }
-    else{
-      MessageFun(ret.data.msg, 'error');
-    }
+    await loginapi.regist(user.username, user.password);
+    MessageFun('注册成功', 'success');
   }
   catch (error: any) {
-    NotificationFun(error.message as string, '注册失败', 'error');
+    MessageFun(error, 'error');
   }
 }
 

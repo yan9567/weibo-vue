@@ -103,7 +103,7 @@ const Add = async (content: string) => {
     Flush();
   }
   catch (error: any) {
-    NotificationFun(error.message as string, '保存内容失败', 'error');
+    MessageFun(error, 'error');
   }
 }
 
@@ -120,7 +120,7 @@ const Delete = async (id: string) => {
     Flush();
   }
   catch (error: any) {
-    NotificationFun(error.message as string, '删除失败', 'error');
+    MessageFun(error, 'error');
   }
 }
 
@@ -131,15 +131,14 @@ const Delete = async (id: string) => {
 const Flush = (page: number = 0) => {
   if (page < 0) page = 0;
   weiboapi.Page(page)
-    .then((response: { data: { total: number, data: Weibo[] }; }) => {
-      if (response.data.data) {
-        weibos.value = response.data.data;
+    .then((response: { data: { total: number, list: Weibo[] } }) => {
+      if (response.data) {
+        weibos.value = response.data.list;
         totalCount.value = response.data.total;
       }
     })
     .catch((error: any) => {
-      console.log('error', error);
-      NotificationFun(error, '请求内容失败', 'error');
+      MessageFun(error, 'error');
     })
     .finally(() => {
       if (loading.value) {
