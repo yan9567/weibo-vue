@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import UserInfo from "./modules/User"
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import router from '~/routers';
 
 const useUserStore = defineStore('user', () => {
@@ -19,8 +19,18 @@ const useUserStore = defineStore('user', () => {
     router.push('/login');
   }
 
+  const updateHeadpic = (headurl: string) => {
+    if (state.value) {
+      state.value.headUrl = headurl;
+    }
+  }
 
-  return { state, Login, Logout,  }
+  const getToken = computed(() => {
+    return 'bearer ' + state.value?.token;
+  })
+
+
+  return { state, Login, Logout, updateHeadpic, getToken}
 
 });
 

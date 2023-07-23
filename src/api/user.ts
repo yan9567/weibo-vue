@@ -1,4 +1,7 @@
 import request from "./axiaosConfig"
+import useUserStore from "~/store/UserInfo";
+
+const userStore = useUserStore();
 
 const login = (username: string, password: string) => {
   return request({
@@ -23,4 +26,13 @@ const all = () => {
   });
 }
 
-export { login, regist, all };
+const updateHeadPic = (headUrl: string) => {
+  return request({
+    url: '/users',
+    method: 'put',
+    data: { headUrl },
+    headers: { Authorization: userStore.getToken }
+  });
+}
+
+export { login, regist, all, updateHeadPic };
