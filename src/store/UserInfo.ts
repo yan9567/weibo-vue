@@ -19,18 +19,19 @@ const useUserStore = defineStore('user', () => {
     router.push('/login');
   }
 
-  const updateHeadpic = (headurl: string) => {
-    if (state.value) {
-      state.value.headUrl = headurl;
-    }
-  }
+  // 不需要，直接对state进行修改
+  // const updateHeadpic = (headurl: string) => {
+  //   if (state.value) {
+  //     state.value.headUrl = headurl;
+  //   }
+  // }
 
   const getToken = computed(() => {
     return 'bearer ' + state.value?.token;
   })
 
 
-  return { state, Login, Logout, updateHeadpic, getToken}
+  return { state, Login, Logout, getToken}
 
 });
 

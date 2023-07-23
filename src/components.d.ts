@@ -30,7 +30,6 @@ declare module 'vue' {
     ElSkeletonItem: typeof import('element-plus/es')['ElSkeletonItem']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElText: typeof import('element-plus/es')['ElText']
-    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Login: typeof import('./components/Login.vue')['default']
     Profile: typeof import('./components/Profile.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
