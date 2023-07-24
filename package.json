@@ -10,8 +10,10 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@types/crypto-js": "^4.1.1",
     "@types/qs": "^6.9.7",
     "axios": "^1.4.0",
+    "crypto-js": "^4.1.1",
     "element-plus": "^2.3.8",
     "pinia": "^2.1.4",
     "qs": "^6.11.2",
