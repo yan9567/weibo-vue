@@ -21,6 +21,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_API: https://www.ppos.top/api
 
       - name: Deploy GitHub Pages site
         uses: actions/deploy-pages@v2.0.3
