@@ -46,7 +46,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           token: ret.data.token,
           role: "admin",
           lastlogin: ret.data.lastlogin,
-          headUrl : ret.data.headUrl
+          headUrl : ret.data.headUrl,
+          expire: ret.data.expire
         }
         userStore.Login(userinfo);
       }

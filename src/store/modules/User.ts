@@ -4,6 +4,7 @@ interface UserInfo {
     username: string
     token: string
     role: "user" | "admin"
-    lastlogin?: Date
+    lastlogin?: Date,
+    expire: Date
 }
 export default UserInfo;

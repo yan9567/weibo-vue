@@ -32,11 +32,17 @@ import UserInfo from '~/store/modules/User';
 
 const userStore = useUserStore();
 
-const InitUser = () =>{
+const InitUser = () => {
   let local = window.localStorage.getItem('user');
-  if(local){
+  if (local) {
     let userinfo = JSON.parse(local) as UserInfo;
-    userStore.Login(userinfo);
+    //Token过期处理
+    if (userinfo.expire < new Date()) {
+      window.localStorage.clear();
+    }
+    else{
+      userStore.Login(userinfo);
+    }
   }
 }
 
