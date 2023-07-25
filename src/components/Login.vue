@@ -8,7 +8,7 @@ import UserInfo from '~/store/modules/User';
 import { gotoUrl } from '~/composables';
 
 const authorize = 'https://github.com/login/oauth/authorize';
-const redirect_uri = 'http://127.0.0.1:5173/api/login';
+const redirect_uri = import.meta.env.VITE_API +'/login'; //https://www.ppos.top/api/login';
 
 const outhurl = `${authorize}?client_id=${import.meta.env.VITE_CLIENT_ID}&redirect_uri=${redirect_uri}`;
 
