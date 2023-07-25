@@ -40,7 +40,7 @@ service.interceptors.response.use(
     },
     error => {
         //Token无效
-        if(error.response.status === 401){
+        if(error.response && error.response.status === 401){
             userStore.Logout();
             NotificationFun(error.response.data.msg, '请求失败', "error");
         }
