@@ -26,7 +26,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_API: https://www.ppos.top/api
+          VITE_HOST: https://www.ppos.top
+          VITE_CLIENT_ID: 66770019f90670c913af
      
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
