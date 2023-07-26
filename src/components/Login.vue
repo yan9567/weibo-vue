@@ -10,7 +10,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { onMounted, watch } from 'vue';
 
 const authorize = 'https://github.com/login/oauth/authorize';
-const redirect_uri = import.meta.env.VITE_HOST + '/#/login';
+const redirect_uri = import.meta.env.VITE_HOST + '/#/login';//'http://127.0.0.1:5173/#/login'//import.meta.env.VITE_HOST + '/#/login';
 
 const outhurl = `${authorize}?client_id=${import.meta.env.VITE_CLIENT_ID}&redirect_uri=${redirect_uri}`;
 
