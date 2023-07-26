@@ -41,7 +41,6 @@ const getQueryString = (name: string, search: string | undefined) => {
     if(!search) return null;
     let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     let r = search.match(reg);
-    console.log(r);
     if (r != null) return decodeURI(r[2]); 
     return null;
 }

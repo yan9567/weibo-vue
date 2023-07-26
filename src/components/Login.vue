@@ -97,7 +97,8 @@ const regist = async () => {
 onMounted(async () => {
   //处理github登录回调
   // if (route.query.code) {
-  if (code.code) {
+  if (code.code && !userStore.state) {
+    window.location.search = '';
     loading.value = true;
     console.log('OAuth登录中。。');
     try {
