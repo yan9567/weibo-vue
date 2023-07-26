@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js'
 
 const userStore = useUserStore();
 
-const encryPwd = (pwd: string) :string => {
+const encryPwd = (pwd: string): string => {
   return CryptoJS.HmacMD5(pwd, '!@#').toString();
 }
 
@@ -40,4 +40,12 @@ const updateHeadPic = (headUrl: string) => {
   });
 }
 
-export { login, regist, all, updateHeadPic };
+const loginbygithub = (code: string) => {
+  return request({
+    url: '/login',
+    method: 'get',
+    params: {code}
+  });
+}
+
+export { login, regist, all, updateHeadPic, loginbygithub };

@@ -37,4 +37,7 @@ declare module 'vue' {
     Weibo: typeof import('./components/Weibo.vue')['default']
     WeiboContainer: typeof import('./components/WeiboContainer.vue')['default']
   }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
+  }
 }

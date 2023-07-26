@@ -8,7 +8,7 @@ const userStore = useUserStore();
 //axios实例
 const service = axios.create({
     withCredentials: false,
-    timeout: 1000,
+    timeout: 5000,
     headers: { "Content-Type": "application/json" },
     paramsSerializer: (params) => {
         return qs.stringify(params);
@@ -18,7 +18,7 @@ const service = axios.create({
 //请求拦截器
 service.interceptors.request.use(
     config => {
-        config.baseURL = import.meta.env.VITE_API;
+        config.baseURL = import.meta.env.VITE_HOST + '/api';
         return config;
     },
     error => Promise.reject(error)
