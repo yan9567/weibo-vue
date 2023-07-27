@@ -65,10 +65,11 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: delete dist
-        run: ssh production 'cd weibo-docker && tar -zcf dist.tar.gz dist --remove-files 2>/dev/null'
+        run: ssh production 'cd weibo-docker && tar -zcf dist.tar.gz dist --remove-files'
 
       - name: copy dist
-        run: scp ./dist production:~/weibo-docker
+        if: ${{ failure() }}
+        run: scp -r ./dist production:~/weibo-docker
 
   deploy_gh:
     runs-on: ubuntu-latest
