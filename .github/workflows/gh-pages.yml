@@ -39,6 +39,7 @@ jobs:
   
   deploy_remote:
     runs-on: ubuntu-latest
+    environment: github-pages
     needs: build
     steps:
       - name: Download artifact from build job
@@ -52,7 +53,7 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/ssh.key
           chmod 600 ~/.ssh/ssh.key
           cat >>~/.ssh/config <<END
-          Host product
+          Host production
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/ssh.key
@@ -64,10 +65,10 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: delete dist
-        run: ssh product 'cd weibo-docker && tar -zcf dist.tar.gz dist && rm -rf dist'
+        run: ssh production 'cd weibo-docker && tar -zcf dist.tar.gz dist && rm -rf dist'
 
       - name: copy dist
-        run: scp ./dist product:~/weibo-docker
+        run: scp ./dist production:~/weibo-docker
 
   deploy_gh:
     runs-on: ubuntu-latest
