@@ -36,7 +36,9 @@ jobs:
         with:
           name: weibo
           path: ./dist
-  
+          retention-days: 1
+          if-no-files-found: error
+
   deploy_remote:
     runs-on: ubuntu-latest
     environment: github-pages
@@ -46,6 +48,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: weibo
+          path: ./dist
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: 'Echo download path'
+        run: echo ${{steps.download.outputs.download-path}}
 
       - name: Configure SSH
         run: |
@@ -69,7 +78,9 @@ jobs:
 
       - name: copy dist
         if: ${{ failure() }}
-        run: scp -r ./dist production:~/weibo-docker
+        run: |
+          scp -r ./dist production:~/weibo-docker
+          ssh production 'cd ~/weibo-docker && sudo docker-compose restart nginx'
 
   deploy_gh:
     runs-on: ubuntu-latest
@@ -81,6 +92,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: weibo
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: 'Echo download path'
+        run: echo ${{steps.download.outputs.download-path}}
 
       - name: Deploy_gh
         uses: peaceiris/actions-gh-pages@v3
