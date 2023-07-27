@@ -78,7 +78,9 @@ jobs:
 
       - name: copy dist
         if: ${{ always() }}
-        run: scp -r ./dist production:~/weibo-docker
+        run: |
+          scp -r ./dist production:~/weibo-docker
+          ssh production 'cd ~/weibo-docker && sudo docker-compose restart nginx'
 
   deploy_gh:
     runs-on: ubuntu-latest
