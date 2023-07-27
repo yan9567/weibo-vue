@@ -77,10 +77,8 @@ jobs:
         run: ssh production 'cd weibo-docker && tar -zcf dist.tar.gz dist --remove-files'
 
       - name: copy dist
-        if: ${{ failure() }}
-        run: |
-          scp -r ./dist production:~/weibo-docker
-          ssh production 'cd ~/weibo-docker && sudo docker-compose restart nginx'
+        if: ${{ always() }}
+        run: scp -r ./dist production:~/weibo-docker
 
   deploy_gh:
     runs-on: ubuntu-latest
@@ -91,8 +89,9 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: weibo
-
+          name: weibo 
+          #两种方式: @V3不写路径就是当前目录；或者写path指明文件
+          #path: ./dist
       - name: Display structure of downloaded files
         run: ls -R
 
@@ -103,5 +102,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: .  #跟据download-artifact@v3 路径，./dist 或者 .
           force_orphan: true
