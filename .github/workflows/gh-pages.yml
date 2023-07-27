@@ -4,9 +4,11 @@ on:
     branches:
       - master
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
     permissions:
       contents: write        
 
@@ -28,8 +30,55 @@ jobs:
         env:
           VITE_HOST: https://www.ppos.top
           VITE_CLIENT_ID: 66770019f90670c913af
-     
-      - name: Deploy
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: weibo
+          path: ./dist
+  
+  deploy_remote:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: weibo
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/ssh.key
+          chmod 600 ~/.ssh/ssh.key
+          cat >>~/.ssh/config <<END
+          Host product
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/ssh.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: delete dist
+        run: ssh product 'cd weibo-docker && tar -zcf dist.tar.gz dist && rm -rf dist'
+
+      - name: copy dist
+        run: scp ./dist product:~/weibo-docker
+
+  deploy_gh:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: weibo
+
+      - name: Deploy_gh
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
