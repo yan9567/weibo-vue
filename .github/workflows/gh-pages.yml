@@ -106,4 +106,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .  #跟据download-artifact@v3 路径，./dist 或者 .
           force_orphan: true
-          cname: src.blog.mangojuice.cn
+          cname: blog.mangojuice.cn
