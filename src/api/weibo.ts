@@ -37,4 +37,14 @@ const Delete = (id: string) => {
   });
 };
 
-export { Page, Add, Delete }
+const Update = (id: string, content: string) => {
+  return request({
+    url: 'contentlist/' + id,
+    method: 'put',
+    //Authorization只能在这传，在axiosConfig里已生成了实例，在那无法更新
+    headers: { ...{ 'Authorization': 'bearer ' + userStore.state?.token } },
+    data: {content}
+  });
+};
+
+export { Page, Add, Delete, Update }
