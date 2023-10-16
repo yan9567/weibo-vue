@@ -86,15 +86,21 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 /**注册 */
-const regist = async () => {
-  try {
-    
-    await userapi.regist(user.username, user.password);
-    MessageFun('注册成功', 'success');
-  }
-  catch (error: any) {
-    MessageFun(error, 'error');
-  }
+const regist = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate(async (valid, fields) => {
+    if (valid) {
+      try {
+        await userapi.regist(user.username, user.password);
+        MessageFun('注册成功', 'success');
+      }
+      catch (error: any) {
+        MessageFun(error, 'error');
+      }
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 
 onMounted(async () => {
@@ -144,7 +150,7 @@ onMounted(async () => {
 
     <el-form-item label=" ">
       <el-button type="primary" @click="submitForm(formRef)">登录</el-button>
-      <el-button @click="regist">注册</el-button>
+      <el-button @click="regist(formRef)">注册</el-button>
       <el-button @click="gotoUrl(outhurl)">Github登录</el-button>
     </el-form-item>
 
