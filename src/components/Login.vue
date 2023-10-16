@@ -31,6 +31,7 @@ const rules = reactive<FormRules<User>>({
   username: [
     { required: true, message: '用户名不能为空', trigger: 'blur' }, //blur 失去聚点触发
     { min: 2, max: 10, message: '用户名为2~10个字符', trigger: 'blur' },
+    { pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{2,10}$/, message:'请输入中文、英文、数字', trigger: 'blur'}
   ],
   password: [
     {
@@ -38,6 +39,7 @@ const rules = reactive<FormRules<User>>({
       message: '密码不能为空',
       trigger: 'change',
     },
+    { pattern: /^[a-zA-Z0-9@#!*]{6,8}$/, message:'请输入英文、数字、@#!*', trigger: 'change'}
   ]
 });
 
@@ -86,6 +88,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 /**注册 */
 const regist = async () => {
   try {
+    
     await userapi.regist(user.username, user.password);
     MessageFun('注册成功', 'success');
   }
