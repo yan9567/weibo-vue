@@ -42,8 +42,7 @@
         @next-click="next" @current-change="pageto" />
     </el-row>
     <el-row justify="space-around" class="my3 items-center">
-      <el-text size="default" style="color: var(--ep-color-info);">power by 果酱 with hair @ 2022</el-text>
-      <el-link type="info" :underline="false" href="http://beian.miit.gov.cn/">赣ICP备19013471号</el-link>
+      <el-text size="default" style="color: var(--ep-color-info);">power with hair by 果酱 @ 2022</el-text>
     </el-row>
   </div>
 </template>
