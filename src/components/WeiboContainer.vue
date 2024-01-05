@@ -43,13 +43,14 @@
     </el-row>
     <el-row justify="space-around" class="my3 items-center">
       <el-text size="default" style="color: var(--ep-color-info);">power with hair by 果酱 @ 2022</el-text>
+      <el-text size="default" style="color: var(--ep-color-info);">{{ livelong }}</el-text>
     </el-row>
   </div>
 </template>
   
 <script lang="ts" setup>
 import { Plus, Check } from '@element-plus/icons-vue'
-import { computed, onMounted, ref, shallowRef } from 'vue';
+import { computed, onMounted, onBeforeUnmount, ref, shallowRef } from 'vue';
 import WeiboView from "./Weibo.vue"
 import Weibo from "~/store/modules/Weibo"
 import { MessageFun, NotificationFun } from "~/composables/index";
@@ -65,6 +66,8 @@ const totalCount = ref(100);
 const weibos = ref<Weibo[]>();
 const loading = ref(true);
 let isEditing = ref(false);
+let timer: NodeJS.Timer;
+const livelong = ref('');
 
 const btnText = computed(() => {
   return isEditing.value ? '提交' : '新建'
@@ -91,9 +94,38 @@ const AddOrSubmit = (event: Event) => {
 onMounted(() => {
   Flush();
   picStore.initPics();
+  timer = setInterval(weblivelong, 1000)
 })
+/**析构 */
+onBeforeUnmount(() => {
+  clearInterval(timer);
+});
+const weblivelong = () => {
+  //2022/3/23 14:19:31
+  let birthday= import.meta.env.VITE_BRITHDAY ? import.meta.env.VITE_BRITHDAY : "2022/3/23 14:19:31";
+  let start = new Date(birthday);    //开始时间
+  let now = new Date();    //结束时间
+  let alive = now.getTime() - start.getTime(); //时间差秒]
 
+  //年
+  let years = Math.floor(alive / (365 * 24 * 3600 * 1000));
 
+  //计算出相差天数
+  let days = Math.floor(alive / (24 * 3600 * 1000) - years * 365);
+
+  //计算出小时数
+  let leave1 = alive % (24 * 3600 * 1000);  //计算天数后剩余的毫秒数
+  let hours = Math.floor(leave1 / (3600 * 1000));
+
+  //计算相差分钟数
+  let leave2 = leave1 % (3600 * 1000);        //计算小时数后剩余的毫秒数
+  let minutes = Math.floor(leave2 / (60 * 1000));
+
+  //计算相差秒数
+  let leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
+  let seconds = Math.round(leave3 / 1000);
+  livelong.value = "本站存活：" + years + "年" + days + "天" + hours.toString().padStart(2, '0') + "时" + minutes.toString().padStart(2, '0') + "分" + seconds.toString().padStart(2, '0') + "秒";
+}
 /**
  * 新增
  * @param content 内容
