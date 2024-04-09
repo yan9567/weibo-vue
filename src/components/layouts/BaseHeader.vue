@@ -1,10 +1,12 @@
 <script lang="ts" setup>
+import { reactive, ref } from 'vue';
 import { toggleDark, gotoUrl, openUrl } from "~/composables"; //composables组合式函数，类似uitls
 import useUserStore from "~/store/UserInfo";
 import router from "~/routers";
 
 const userStore = useUserStore();
 
+const query = ref('')
 const HandlerClick = () => {
   if(userStore.state){
     router.push('/profile')
@@ -14,15 +16,30 @@ const HandlerClick = () => {
   }
 }
 
+const HandleSearch = () => {
+  if(!query.value) return
+  console.log(query.value)
+}
+
 </script>
 
 <template>
   <el-row justify="center">
     <el-col :span="9">
-      <el-menu class="el-menu-demo" mode="horizontal" :ellipsis=false>
+      <el-menu mode="horizontal" :ellipsis=false>
         <el-menu-item index="1" @click="$router.push('/')">Home</el-menu-item>
         <!-- unocss -->
-        <div class="flex-1" />
+        <!-- <div class="flex-1" /> -->
+        <div class="flex flex-1 flex-justify-end items-center">
+          <el-input
+            v-model="query"
+            style="width: 240px"
+            placeholder="搜索"
+            :suffix-icon="Search"
+            clearable
+            @keyup.enter.native="HandleSearch"
+          />
+        </div>
         <el-menu-item index="2" @click="HandlerClick">{{ userStore.state ? userStore.state?.username : 'Login' }}</el-menu-item>
         <el-menu-item index="3" @click="gotoUrl('https://blog.ppos.top')">Blog</el-menu-item>
         <el-sub-menu index="4">

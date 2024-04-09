@@ -15,6 +15,20 @@ const Page = (page: number) => {
   });
 }
 
+/**
+ * 搜索结果分页
+ * @param query 
+ * @param page 
+ * @returns 
+ */
+const Search = (query: number, page: number) => {
+  return request({
+    url: 'contentlist/search/' + page + '/' + query,
+    method: 'get',
+  });
+}
+
+
 const Add = (content: string) => {
   return request({
     url: 'contentlist',
@@ -47,4 +61,4 @@ const Update = (id: string, content: string) => {
   });
 };
 
-export { Page, Add, Delete, Update }
+export { Page, Add, Delete, Update, Search }

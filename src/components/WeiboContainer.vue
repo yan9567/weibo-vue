@@ -160,6 +160,31 @@ const Delete = async (id: string) => {
 }
 
 /**
+ * 搜索
+ * @param query 
+ * @param page 
+ */
+const Search = (query: string, page: number = 0) => {
+  if(!query) return;
+  if (page < 0) page = 0;
+  weiboapi.Search(page)
+    .then((response: { data: { total: string, list: Weibo[] } }) => {
+      if (response.data) {
+        weibos.value = response.data.list;
+        totalCount.value = parseInt(response.data.total);
+      }
+    })
+    .catch((error: any) => {
+      MessageFun(error, 'error');
+    })
+    .finally(() => {
+      if (loading.value) {
+        loading.value = false;
+      }
+    });
+}
+
+/**
  * 更新微博内容
  * @param page 页码
  */
@@ -210,6 +235,8 @@ const pageto = (index: number) => {
   currentPage.value = index - 1;
   Flush(currentPage.value);
 }
+
+defineExpose({Search})
 </script>
 
 <style lang="scss" scoped>
