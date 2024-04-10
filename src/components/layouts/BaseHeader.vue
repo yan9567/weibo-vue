@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, getCurrentInstance } from 'vue';
 import { toggleDark, gotoUrl, openUrl } from "~/composables"; //composables组合式函数，类似uitls
 import useUserStore from "~/store/UserInfo";
 import router from "~/routers";
 
+const instance = getCurrentInstance();
+const bus = instance?.appContext.config.globalProperties.$bus;
 const userStore = useUserStore();
 
 const query = ref('')
@@ -17,8 +19,9 @@ const HandlerClick = () => {
 }
 
 const HandleSearch = () => {
-  if(!query.value) return
-  console.log(query.value)
+  // if(!query.value) return
+  //发出事件
+  bus.emit('search', query.value)
 }
 
 </script>
@@ -30,12 +33,12 @@ const HandleSearch = () => {
         <el-menu-item index="1" @click="$router.push('/')">Home</el-menu-item>
         <!-- unocss -->
         <!-- <div class="flex-1" /> -->
-        <div class="flex flex-1 flex-justify-end items-center">
+        <div class="flex flex-1 flex-justify-end items-center pr-1">
+          <!--prefix-icon="Search" 不能正确显示，是透明的 --->
           <el-input
             v-model="query"
-            style="width: 240px"
+            style="width: 60%; min-width: 50px;"
             placeholder="搜索"
-            :suffix-icon="Search"
             clearable
             @keyup.enter.native="HandleSearch"
           />

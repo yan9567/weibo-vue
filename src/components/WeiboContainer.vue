@@ -47,7 +47,7 @@
     </el-row>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { Plus, Check } from '@element-plus/icons-vue'
 import { computed, onMounted, onBeforeUnmount, ref, shallowRef } from 'vue';
@@ -57,6 +57,11 @@ import { MessageFun, NotificationFun } from "~/composables/index";
 import { weiboapi } from "~/api/index";
 import useUserStore from '~/store/UserInfo';
 import usePicsStore from '~/store/UserPic';
+import { getCurrentInstance } from 'vue'
+
+// 在setup函数中获取实例对象并定义bus
+const instance = getCurrentInstance()
+const bus = instance?.appContext.config.globalProperties.$bus
 
 const picStore = usePicsStore();
 const userStore = useUserStore();
@@ -66,7 +71,7 @@ const totalCount = ref(100);
 const weibos = ref<Weibo[]>();
 const loading = ref(true);
 let isEditing = ref(false);
-let timer: NodeJS.Timer;
+let nIntervId: number;
 const livelong = ref('');
 
 const btnText = computed(() => {
@@ -92,17 +97,33 @@ const AddOrSubmit = (event: Event) => {
 
 /**初始化 */
 onMounted(() => {
+  //请求首页内容
   Flush();
+  //加载头像
   picStore.initPics();
-  timer = setInterval(weblivelong, 1000)
+  // 在mounted 函数中声明监听对象
+  bus.on('search', (querystr: any) => {
+    // console.log('获取其它组建传给我的值' + querystr)
+    if (!querystr || querystr == '') {
+      Flush();
+    }else{
+      Search(querystr, 0);
+    }
+  })
+  //计算存活时长
+  nIntervId = window.setInterval(weblivelong, 1000)
 })
 /**析构 */
 onBeforeUnmount(() => {
-  clearInterval(timer);
+  clearInterval(nIntervId);
 });
+
+/**
+ * 计算网站存活时长
+ */
 const weblivelong = () => {
   //2022/3/23 14:19:31
-  let birthday= import.meta.env.VITE_BRITHDAY ? import.meta.env.VITE_BRITHDAY : "2022/3/23 14:19:31";
+  let birthday = import.meta.env.VITE_BRITHDAY ? import.meta.env.VITE_BRITHDAY : "2022/3/23 14:19:31";
   let start = new Date(birthday);    //开始时间
   let now = new Date();    //结束时间
   let alive = now.getTime() - start.getTime(); //时间差秒]
@@ -165,9 +186,9 @@ const Delete = async (id: string) => {
  * @param page 
  */
 const Search = (query: string, page: number = 0) => {
-  if(!query) return;
+  if (!query || query == '') return;
   if (page < 0) page = 0;
-  weiboapi.Search(page)
+  weiboapi.Search(query, page)
     .then((response: { data: { total: string, list: Weibo[] } }) => {
       if (response.data) {
         weibos.value = response.data.list;
@@ -236,7 +257,7 @@ const pageto = (index: number) => {
   Flush(currentPage.value);
 }
 
-defineExpose({Search})
+defineExpose({ Search })
 </script>
 
 <style lang="scss" scoped>
@@ -261,4 +282,3 @@ defineExpose({Search})
   opacity: 0;
 }
 </style>
-  

@@ -21,7 +21,7 @@ const Page = (page: number) => {
  * @param page 
  * @returns 
  */
-const Search = (query: number, page: number) => {
+const Search = (query: string, page: number) => {
   return request({
     url: 'contentlist/search/' + page + '/' + query,
     method: 'get',
